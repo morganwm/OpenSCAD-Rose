@@ -122,9 +122,10 @@ module flower() {
             $fn = 100
         ) rounded_n_gon(radius = 0.95);
 
+        // rotate([]) 
         translate([0,0,3.1]) 
-            rotate([180,0,0]) 
-            linear_extrude(height = 1, scale = 0.25) 
+            rotate([180,0,30]) 
+            linear_extrude(height = 1, scale = 0.25, twist = -60) 
             rounded_n_gon(radius = 1);
     }
 }
