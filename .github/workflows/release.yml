@@ -19,6 +19,9 @@ jobs:
       - name: Make Output Folder
         run: mkdir out
 
+      - name: Make Project Folder
+        run: mkdir out/${{ matrix.project }}
+
       - name: OpenSCAD Build Action
         uses: pkoehlers/openscad-build-action@v1.0.2
         with:
