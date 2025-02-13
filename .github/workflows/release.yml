@@ -22,7 +22,6 @@ jobs:
 
       - name: Build Artifacts
         run: |
-          VERSION="$(git describe --tags)"
           mkdir out/${{ matrix.project }}
 
           openscad -o ./out/${{ matrix.project }}/${{ matrix.project }}.${{ matrix.output }} -P default ./${{ matrix.project }}.scad
