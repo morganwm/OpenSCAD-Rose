@@ -37,11 +37,12 @@ jobs:
             console.log("Release:", { release });
 
             for (let file of await fs.readdir("./out")) {
-              console.log("Uploading", file);
+              let foundFile = `./out/${file}`;
+              console.log("Uploading", foundFile);
               await github.rest.repos.uploadReleaseAsset({
                 owner, repo,
                 release_id: release.data.id,
-                name: file,
-                data: await fs.readFile(file),
+                name: foundFile,
+                data: await fs.readFile(foundFile),
               });            
             }
