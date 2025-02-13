@@ -17,12 +17,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Make Project Folder
-        run: mkdir -p out/${{ matrix.project }}
-
       - name: Build Artifacts
         run: |
-          mkdir out
+          mkdir -p out
           openscad -o ./out/${{ matrix.project }}.${{ matrix.output }} -P default ./${{ matrix.project }}.scad
 
       - name: Upload release artifacts
