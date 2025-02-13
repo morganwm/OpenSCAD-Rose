@@ -4,29 +4,24 @@ More information: http://creativecommons.org/licenses/by-sa/4.0/
 Original Author: Nexusnui
 */
 
-module variable_extrude(height, center = false, convexity = 10, twist = 0, slices = 20, scale = 1.0, $fn = $fn){
+module variable_extrude(
+	height,
+	center = false,
+	convexity = 10,
+	twist = 0,
+	slices = 20,
+	scale_fn = [function(z) 1, function(z) 1],
+	$fn = $fn
+){
+
 	sl = slices >= floor($fn/4) ? slices : floor($fn/4);
 	sub_sl = slices >= $fn/4 ? 1 : 4;
 
 	sl_h=height/sl;
 
-	scale_x = is_list(scale) ? 
-				is_function(scale[0])?
-					scale[0]:
-					function(z) z*(scale[0]-1)+1:
-				is_function(scale) ? 
-					scale:
-					function(z) z*(scale-1)+1  
-	;
+	scale_x = scale_fn[0];
 
-	scale_y = is_list(scale) ? 
-				is_function(scale[1])?
-					scale[1]:
-					function(z) z*(scale[1]-1)+1:
-				is_function(scale) ? 
-					scale:
-					function(z) z*(scale-1)+1         
-	;
+	scale_y = scale_fn[1];
 
 	sl_t=twist/sl;
 
@@ -69,16 +64,16 @@ upscale=3;
 
 //Hour Glass shape with circle and test_function_1
 translate([-15*upscale,0])scale([upscale,upscale,upscale])
-	variable_extrude(height=20, scale=test_function_1, slices=30,$fn=60)
+	variable_extrude(height=20, scale_fn=[test_function_1, test_function_1], slices=30,$fn=60)
 		circle(r=5);
 
 //Square extruded and scaled with test_function_2 on the x-axis
 scale([upscale,upscale,upscale])
-	variable_extrude(height=20, scale=[test_function_2,1], slices=30,$fn=60)
+	variable_extrude(height=20, scale_fn=[test_function_2,function(z) 1], slices=30,$fn=60)
 		square([10,10],center=true);
 
 //Circle and Squares extruded with a twist and with both test functions
-translate([15*upscale,0])scale([upscale,upscale,upscale])variable_extrude(height=20, scale=[test_function_2,test_function_1], slices=30,twist=120,$fn=60){
+translate([15*upscale,0])scale([upscale,upscale,upscale])variable_extrude(height=20, scale_fn=[test_function_2,test_function_1], slices=30,twist=120,$fn=60){
 	circle(r=5);
 
 	square([2.5,10.5],center=true);

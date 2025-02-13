@@ -67,7 +67,7 @@ module vase() {
     variable_extrude(
         height = 10,
         twist = 180,
-        scale = scale_fn,
+        scale_fn = [scale_fn, scale_fn],
         $fn = 100
     )
         rounded_n_gon(radius = 2);
@@ -118,7 +118,7 @@ module flower() {
         variable_extrude(
             height = 3,
             twist = 60,
-            scale = scale_fn,
+            scale_fn = [scale_fn, scale_fn],
             $fn = 100
         ) rounded_n_gon(radius = 0.95);
 
