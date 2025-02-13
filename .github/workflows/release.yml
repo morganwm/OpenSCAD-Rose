@@ -5,6 +5,7 @@ name: Upload Release Asset
 jobs:
   release:
     name: Upload Release Asset
+    permissions: write-all
     runs-on: ubuntu-latest
     container: openscad/openscad:dev
     strategy:
