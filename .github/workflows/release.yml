@@ -1,0 +1,53 @@
+on:
+  release:
+    types: [published]
+name: Upload Release Asset
+jobs:
+  release:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        project: [rose]
+        output: [3mf,png]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: OpenSCAD Build Action
+        uses: pkoehlers/openscad-build-action@v1.0.2
+        with:
+          input-file: ${{ matrix.project }}.scad
+          output-file: out/${{ matrix.project }}/${{ matrix.project }}.${{ matrix.output }}
+      
+      - name: Bundle Artifacts
+        run: |
+          tar -cvzf "${{ matrix.project }}.tar.gz" -C "out" ${{ matrix.project }}
+
+    
+      - name: Upload release artifacts
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require("fs").promises;
+            const { repo: { owner, repo }, sha } = context;
+
+            const release = await github.rest.repos.getReleaseByTag({
+              owner, repo,
+              tag: process.env.GITHUB_REF.replace("refs/tags/", ""),
+            });
+            console.log("Release:", { release });
+
+            for (let file of await fs.readdir(".")) {
+              if (!file.myString.endsWith("tar.gz")) continue;
+              console.log("Uploading", file);
+              await github.rest.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: release.data.id,
+                name: file,
+                data: await fs.readFile(file),
+              });            
+            }
