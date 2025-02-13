@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Make Project Folder
-        run: mkdir out/${{ matrix.project }}
+        run: mkdir -p out/${{ matrix.project }}
 
       - name: Build Artifacts
         run: |
