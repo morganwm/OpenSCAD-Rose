@@ -22,13 +22,10 @@ jobs:
 
       - name: Build Artifacts
         run: |
-          mkdir out/${{ matrix.project }}
+          mkdir out
+          openscad -o ./out/${{ matrix.project }}.${{ matrix.output }} -P default ./${{ matrix.project }}.scad
 
-          openscad -o ./out/${{ matrix.project }}/${{ matrix.project }}.${{ matrix.output }} -P default ./${{ matrix.project }}.scad
 
-          tar -cvzf "${{ matrix.project }}.tar.gz" -C "out" ${{ matrix.project }}
-
-    
       - name: Upload release artifacts
         uses: actions/github-script@v7
         with:
@@ -43,8 +40,7 @@ jobs:
             });
             console.log("Release:", { release });
 
-            for (let file of await fs.readdir(".")) {
-              if (!file.myString.endsWith("tar.gz")) continue;
+            for (let file of await fs.readdir("./out")) {
               console.log("Uploading", file);
               await github.rest.repos.uploadReleaseAsset({
                 owner, repo,
