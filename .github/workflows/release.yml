@@ -16,6 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Make Output Folder
+        run: mkdir out
+
       - name: OpenSCAD Build Action
         uses: pkoehlers/openscad-build-action@v1.0.2
         with:
