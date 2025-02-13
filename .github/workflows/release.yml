@@ -16,20 +16,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Make Output Folder
-        run: mkdir out
+      - name: Install OpenSCAD Nightly
+        uses: Irev-Dev/action-install-openscad-nightly@v0.0.1
 
       - name: Make Project Folder
         run: mkdir out/${{ matrix.project }}
 
-      - name: OpenSCAD Build Action
-        uses: pkoehlers/openscad-build-action@v1.0.2
-        with:
-          input-file: ${{ matrix.project }}.scad
-          output-file: out/${{ matrix.project }}/${{ matrix.project }}.${{ matrix.output }}
-      
-      - name: Bundle Artifacts
+      - name: Build Artifacts
         run: |
+          VERSION="$(git describe --tags)"
+          mkdir out/${{ matrix.project }}
+
+          openscad-nightly -o ./out/${{ matrix.project }}/${{ matrix.project }}.${{ matrix.output }} -P default ./${{ matrix.project }}.scad
+
           tar -cvzf "${{ matrix.project }}.tar.gz" -C "out" ${{ matrix.project }}
 
     
